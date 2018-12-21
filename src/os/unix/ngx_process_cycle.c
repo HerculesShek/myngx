@@ -320,11 +320,6 @@ static void ngx_start_worker_processes(ngx_int_t n, ngx_int_t type) {
 
 static void
 ngx_worker_process_cycle(void *data) {
-#if (NGX_THREADS)
-    ngx_int_t          n;
-    ngx_err_t          err;
-    ngx_core_conf_t   *ccf;
-#endif
 
 //    ngx_worker_process_init(cycle, 1);
 
