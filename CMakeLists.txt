@@ -30,19 +30,25 @@ set(SOURCE_FILES
         src/core/ngx_config.h
         src/core/ngx_conf_file.h
         src/core/ngx_core.h
+        src/core/ngx_string.c
         src/core/ngx_string.h
 
 
         src/event/ngx_event.h
 
 
+        src/os/unix/ngx_channel.c
+        src/os/unix/ngx_channel.h
+        src/os/unix/ngx_errno.h
         src/os/unix/ngx_posix_config.h
         src/os/unix/ngx_process.h
         src/os/unix/ngx_process.c
         src/os/unix/ngx_socket.h
-        src/os/unix/ngx_socket.h
+        src/os/unix/ngx_socket.c
         src/os/unix/ngx_process_cycle.h
         src/os/unix/ngx_process_cycle.c
+        src/os/unix/ngx_time.h
+        src/os/unix/ngx_types.h
 
 
         )

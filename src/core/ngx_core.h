@@ -5,14 +5,16 @@
 #ifndef MYNGX_NGX_CORE_H
 #define MYNGX_NGX_CORE_H
 
-
+#include <ngx_errno.h>
 #include <ngx_string.h>
+#include <ngx_time.h>
 
 
 #include <ngx_socket.h> // @note
 /* 因为ngx_process.h中用到了ngx_socket_t类型 而ngx_socket_t类型是在ngx_socket.h中定义的
  * 所以ngx_socket.h必须在ngx_process.h之前
  */
+#include <ngx_types.h>
 #include <ngx_process.h>
 
 
