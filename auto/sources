@@ -1,7 +1,7 @@
 
 # Copyright (C) Igor Sysoev
 
-
+# nginx的3个核心模块
 #CORE_MODULES="ngx_core_module ngx_errlog_module ngx_conf_module"
 
 CORE_INCS="src/core"
@@ -78,6 +78,7 @@ UNIX_DEPS="$CORE_DEPS $EVENT_DEPS \
 UNIX_SRCS="$CORE_SRCS $EVENT_SRCS \
             src/os/unix/ngx_channel.c \
             src/os/unix/ngx_process.c \
+            src/os/unix/ngx_process_cycle.c \
             src/os/unix/ngx_socket.c"
 
 POSIX_DEPS=src/os/unix/ngx_posix_config.h

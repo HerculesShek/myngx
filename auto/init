@@ -67,3 +67,4 @@ upgrade:
 
 	kill -WINCH \`cat $NGX_PID_PATH.oldbin\`
 END
+

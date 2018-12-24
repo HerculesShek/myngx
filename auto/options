@@ -13,7 +13,7 @@ NGX_LOCK_PATH=
 NGX_USER=
 NGX_GROUP=
 
-CC=${CC:-gcc}
+CC=${CC:-gcc} # 设置默认CC
 CPP=
 NGX_OBJS=objs
 
@@ -332,7 +332,7 @@ if [ ".$NGX_PLATFORM" = ".win32" ]; then
     NGX_WINE=$WINE
 fi
 
-
+# 设置nginx默认安装位置
 NGX_PREFIX=${NGX_PREFIX:-/usr/local/nginx}
 
 

@@ -7,35 +7,37 @@
 . auto/init
 . auto/sources
 
-test -d $NGX_OBJS || mkdir $NGX_OBJS
+# create objs directory
+test -d $NGX_OBJS || mkdir $NGX_OBJS # "objs"
 
-echo > $NGX_AUTO_HEADERS_H
-echo > $NGX_AUTO_CONFIG_H
-echo > $NGX_AUTOCONF_ERR
+# create ngx_auto_headers.h ngx_auto_config.h and autoconf.err file
+echo > $NGX_AUTO_HEADERS_H  # "objs/ngx_auto_headers.h"
+echo > $NGX_AUTO_CONFIG_H   # "objs/ngx_auto_config.h"
+echo > $NGX_AUTOCONF_ERR    # "objs/autoconf.err"
 
 
 if [ $NGX_DEBUG = YES ]; then
     have=NGX_DEBUG . auto/have
 fi
 
-
+# 如果 $NGX_PLATFORM 为空
 if test -z "$NGX_PLATFORM"; then
     echo "checking for OS"
 
-    NGX_SYSTEM=`uname -s 2>/dev/null`
-    NGX_RELEASE=`uname -r 2>/dev/null`
-    NGX_MACHINE=`uname -m 2>/dev/null`
+    NGX_SYSTEM=`uname -s 2>/dev/null`   #  kernel-name `Linux` or `Darwin`
+    NGX_RELEASE=`uname -r 2>/dev/null`  # kernel-release `3.10.0-957.1.3.el7.x86_64`
+    NGX_MACHINE=`uname -m 2>/dev/null`  # machine hardware name `x86_64`
 
     echo " + $NGX_SYSTEM $NGX_RELEASE $NGX_MACHINE"
 
-    NGX_PLATFORM="$NGX_SYSTEM:$NGX_RELEASE:$NGX_MACHINE";
+    NGX_PLATFORM="$NGX_SYSTEM:$NGX_RELEASE:$NGX_MACHINE"; # "Linux 3.10.0-957.1.3.el7.x86_64 x86_64"
 
 else
     echo "building for $NGX_PLATFORM"
 fi
 
 
-if [ "$NGX_PLATFORM" != win32 ]; then
+if [ "$NGX_PLATFORM" != win32 ]; then # never use win32
     . auto/headers
 fi
 

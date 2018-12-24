@@ -1,6 +1,7 @@
 
 # Copyright (C) Igor Sysoev
 
+# 在${$NGX_AUTO_CONFIG_H} (默认：objs/ngx_auto_config.h) 文件中用宏来标记相关的配置
 
 cat << END >> $NGX_AUTO_CONFIG_H
 
