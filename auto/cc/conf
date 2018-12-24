@@ -28,7 +28,9 @@ ngx_spacer=
 ngx_long_regex_cont=$ngx_regex_cont
 ngx_long_cont=$ngx_cont
 
+# 获取NGX_CC_NAME `gcc`
 . auto/cc/name
+#echo "NGX_CC_NAME is $NGX_CC_NAME"
 
 if test -n "$CFLAGS"; then
 
@@ -44,7 +46,7 @@ if test -n "$CFLAGS"; then
 
     esac
 
-else
+else # not set CFLAGS
 
     case $NGX_CC_NAME in
         gcc)

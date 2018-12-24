@@ -6,7 +6,7 @@ if echo "test\c" | grep c >/dev/null; then
         ngx_n=
         ngx_c=
 
-    else
+    else # linux here
         echo "2"
         ngx_n=-n
         ngx_c=

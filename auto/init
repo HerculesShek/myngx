@@ -21,7 +21,7 @@ NGX_USE_PCH=
 
 
 # check the echo's "-n" option and "\c" capability
-
+# 使用 ngx_n 和 ngx_c 来终止 echo 换行的
 if echo "test\c" | grep c >/dev/null; then
 
     if echo -n test | grep n >/dev/null; then

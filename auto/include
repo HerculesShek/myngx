@@ -1,6 +1,10 @@
 
 # Copyright (C) Igor Sysoev
 
+# 检查头文件是否存在的的脚本
+# 主要用来检查的文件：unistd.h inttypes.h limits.h sys/filio.h
+#
+
 
 echo $ngx_n "checking for $ngx_include ...$ngx_c"
 
@@ -14,7 +18,7 @@ END
 
 ngx_found=no
 
-cat << END > $NGX_AUTOTEST.c
+cat << END > $NGX_AUTOTEST.c # "objs/autotest.c"
 
 #include <$ngx_include>
 
@@ -35,6 +39,7 @@ if [ -x $NGX_AUTOTEST ]; then
 
     echo " found"
 
+    # ngx_name="UNISTD_H"
     ngx_name=`echo $ngx_include \
               | tr abcdefghijklmnopqrstuvwxyz/. ABCDEFGHIJKLMNOPQRSTUVWXYZ__`
 
