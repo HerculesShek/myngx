@@ -329,7 +329,7 @@ ngx_worker_process_cycle(void *data) {
 //    ngx_setproctitle("worker process");
 
 
-    printf("working");
+    printf("pid[%i] is working\n", getpid());
 //    for ( ;; ) {
 //        if (ngx_exiting
 //            && ngx_event_timer_rbtree.root == ngx_event_timer_rbtree.sentinel)
