@@ -338,18 +338,18 @@ END
 
 # todo will what does objs/modules.c do???
 # 2018-12-25 11:48 暂时先注释掉
-for mod in $modules # "ngx_events_module ngx_event_core_module"
-do
-    echo "extern ngx_module_t  $mod;"         >> $NGX_MODULES_C
-done
-
-echo                                          >> $NGX_MODULES_C
-echo 'ngx_module_t *ngx_modules[] = {'        >> $NGX_MODULES_C
-
-for mod in $modules
-do
-    echo "    &$mod,"                         >> $NGX_MODULES_C
-done
+#for mod in $modules # "ngx_events_module ngx_event_core_module"
+#do
+#    echo "extern ngx_module_t  $mod;"         >> $NGX_MODULES_C
+#done
+#
+#echo                                          >> $NGX_MODULES_C
+#echo 'ngx_module_t *ngx_modules[] = {'        >> $NGX_MODULES_C
+#
+#for mod in $modules
+#do
+#    echo "    &$mod,"                         >> $NGX_MODULES_C
+#done
 
 cat << END                                    >> $NGX_MODULES_C
     NULL

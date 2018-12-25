@@ -16,7 +16,7 @@ ngx_type="long"; . auto/types/sizeof
 ngx_type="long long"; . auto/types/sizeof
 
 ngx_type="void *"; . auto/types/sizeof; ngx_ptr_size=$ngx_size
-ngx_param=NGX_PTR_SIZE; ngx_value=$ngx_size; . auto/types/value
+ngx_param=NGX_PTR_SIZE; ngx_value=${ngx_ptr_size}; . auto/types/value
 
 
 # POSIX types
@@ -63,7 +63,7 @@ ngx_param=NGX_TIME_T_LEN; ngx_value=$ngx_max_len; . auto/types/value
 
 # syscalls, libc calls and some features
 
-
+# 设置进程名字
 ngx_feature="setproctitle()"
 ngx_feature_name="NGX_HAVE_SETPROCTITLE"
 ngx_feature_run=no
