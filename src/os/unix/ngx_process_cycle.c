@@ -287,6 +287,7 @@ static void ngx_start_worker_processes(ngx_int_t n, ngx_int_t type) {
 
 //        cpu_affinity = ngx_get_cpu_affinity(i);
         // fork子进程 worker process
+        printf("fork process index: %i\n ", i);
         ngx_spawn_process(ngx_worker_process_cycle, NULL,
                           "worker process", type);
 
@@ -368,10 +369,8 @@ ngx_worker_process_cycle(void *data) {
 }
 
 
-
 static void
-ngx_start_garbage_collector(ngx_int_t type)
-{
+ngx_start_garbage_collector(ngx_int_t type) {
 #if 0
     ngx_int_t      i;
     ngx_channel_t  ch;
