@@ -351,8 +351,8 @@ END
 #    echo "    &$mod,"                         >> $NGX_MODULES_C
 #done
 
-cat << END                                    >> $NGX_MODULES_C
-    NULL
-};
-
-END
+#cat << END                                    >> $NGX_MODULES_C
+#    NULL
+#};
+#
+#END
