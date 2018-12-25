@@ -341,7 +341,7 @@ ngx_worker_process_cycle(void *data) {
     for (;;) {
         static count = 0;
 
-        printf("\t\tpid[%i] is working on [%i] round(s)....\n", getpid(), count);
+        printf("\tpid[%i] is working on [%i] round(s)....\n", getpid(), count);
         count++;
         int r  = rand();
         int ss = r % 10;
