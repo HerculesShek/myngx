@@ -1,6 +1,14 @@
 
 # Copyright (C) Igor Sysoev
 
+# 判断所有的模块
+# 设置相应的头文件和库
+# 生成objs/ngx_modules.c文件
+
+
+# EVENT_SELECT is 'NO',
+# EVENT_FOUND is 'YES'
+# EVENT_POLL is 'NO'
 
 if [ $EVENT_SELECT = NO -a $EVENT_FOUND = NO ]; then
     EVENT_SELECT=YES
@@ -190,6 +198,7 @@ if [ $HTTP_REFERER = YES ]; then
     HTTP_SRCS="$HTTP_SRCS $HTTP_REFERER_SRCS"
 fi
 
+# 使用HTTP_REWRITE的话 必须使用PCRE 把USE_PCRE置为YES
 if [ $HTTP_REWRITE = YES -a $USE_PCRE != DISABLED ]; then
     have=NGX_HTTP_REWRITE . auto/have
     USE_PCRE=YES
@@ -327,7 +336,9 @@ $NGX_PRAGMA
 
 END
 
-for mod in $modules
+# todo will what does objs/modules.c do???
+# 2018-12-25 11:48 暂时先注释掉
+for mod in $modules # "ngx_events_module ngx_event_core_module"
 do
     echo "extern ngx_module_t  $mod;"         >> $NGX_MODULES_C
 done

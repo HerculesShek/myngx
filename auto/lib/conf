@@ -1,6 +1,14 @@
 
 # Copyright (C) Igor Sysoev
 
+# ./auto/configure --prefix=${PATH}}/install --with-md5=md5 --with-openssl=openssl
+# USE_PCRE is YES
+# PCRE is NONE
+# USE_OPENSSL is NO
+# USE_MD5 is NO
+# USE_SHA1 is NO
+# USE_ZLIB is YES
+# USE_PERL is NO
 
 if [ $USE_PCRE = YES -o $PCRE != NONE ]; then
     . auto/lib/pcre/conf

@@ -4,7 +4,7 @@
 
 ### STUB
 
-if [ $USE_THREADS != NO ]; then
+if [ $USE_THREADS != NO ]; then # todo 此版本禁止使用 --with-threads 暂时不支持
 
 cat << END
 

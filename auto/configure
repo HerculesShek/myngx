@@ -46,11 +46,11 @@ fi
 
 if [ "$NGX_PLATFORM" != win32 ]; then
     . auto/os/features
-    . auto/threads
+    . auto/threads # 暂时不支持threads
 fi
 
-. auto/modules
-. auto/lib/conf
+. auto/modules # generate objs/ngx_modules.c
+. auto/lib/conf # 系统库的一些配置 pcre opssl md5 sha1 zlib perl
 
 . auto/make
 . auto/lib/make

@@ -58,7 +58,7 @@ case $USE_THREADS in
         esac
     ;;
 
-    NO)
+    NO) # 此版本中必须为NO
     ;;
 
     *)

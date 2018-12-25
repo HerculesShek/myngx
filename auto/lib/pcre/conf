@@ -1,7 +1,8 @@
 
 # Copyright (C) Igor Sysoev
 
-
+# # ./auto/configure --prefix=${PATH}}/install --with-md5=md5 --with-openssl=openssl
+# PCRE is NONE now
 if [ $PCRE != NONE ]; then
     CORE_INCS="$CORE_INCS $PCRE"
     CORE_DEPS="$CORE_DEPS $REGEX_DEPS"

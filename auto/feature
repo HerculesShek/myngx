@@ -1,6 +1,17 @@
 
 # Copyright (C) Igor Sysoev
 
+#   ngx_feature="epoll"
+#   ngx_feature_name="NGX_HAVE_EPOLL"
+#   ngx_feature_run=yes
+#   ngx_feature_incs="#include <sys/epoll.h>"
+#   ngx_feature_libs=
+#   ngx_feature_test="int efd = 0, fd = 1, n;
+#                  struct epoll_event ee;
+#                  ee.events = EPOLLIN|EPOLLOUT|EPOLLET;
+#                  ee.data.ptr = NULL;
+#                  efd = epoll_create(100);
+#                  if (efd == -1) return 1;"
 
 echo $ngx_n "checking for $ngx_feature ...$ngx_c"
 

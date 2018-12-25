@@ -14,6 +14,7 @@ ngx_binext=
 ngx_long_start=
 ngx_long_end=
 
+# 正则中文件分隔符 `/`
 ngx_regex_dirsep="\/"
 ngx_dirsep='/'
 

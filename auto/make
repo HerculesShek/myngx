@@ -2,10 +2,11 @@
 # Copyright (C) Igor Sysoev
 
 
+# 创建存放对象文件的目录
 mkdir -p $NGX_OBJS/src/core $NGX_OBJS/src/event $NGX_OBJS/src/event/modules \
          $NGX_OBJS/src/os/unix $NGX_OBJS/src/os/win32 \
          $NGX_OBJS/src/http $NGX_OBJS/src/http/modules \
-	 $NGX_OBJS/src/http/modules/perl \
+         $NGX_OBJS/src/http/modules/perl \
          $NGX_OBJS/src/imap
 
 
