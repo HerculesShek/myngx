@@ -3,6 +3,8 @@
 #include <ngx_core.h>
 #include <ngx_event.h>
 #include <ngx_channel.h>
+//#include <time.h>
+//#include <stdlib.h>
 
 ngx_uint_t ngx_process;
 ngx_pid_t  ngx_pid;
@@ -288,7 +290,7 @@ static void ngx_start_worker_processes(ngx_int_t n, ngx_int_t type) {
 //        cpu_affinity = ngx_get_cpu_affinity(i);
         // fork子进程 worker process
 
-        printf("pid is %i, fork process index: %i\n ", getpid(), i);
+        printf("pid is %i, ppid is %i, fork process index: %i\n ", getpid(), getppid(), i);
         ngx_spawn_process(ngx_worker_process_cycle, NULL,
                           "worker process", type);
 
@@ -329,7 +331,25 @@ ngx_worker_process_cycle(void *data) {
 //    ngx_setproctitle("worker process");
 
 
-    printf("pid[%i] is working\n", getpid());
+    srand(time(NULL));   // Initialization, should only be called once.
+
+
+    printf("\tpid[%i] is begin....\n", getpid());
+
+
+    // todo will 工作进程必须死循环 否则会创建多余进程
+    for (;;) {
+        static count = 0;
+
+        printf("\t\tpid[%i] is working on [%i] round(s)....\n", getpid(), count);
+        count++;
+        int r  = rand();
+        int ss = r % 10;
+        sleep(ss);
+
+        if (count > 10)
+            exit(0);
+    }
 //    for ( ;; ) {
 //        if (ngx_exiting
 //            && ngx_event_timer_rbtree.root == ngx_event_timer_rbtree.sentinel)
