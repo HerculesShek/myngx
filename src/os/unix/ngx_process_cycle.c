@@ -105,6 +105,7 @@ ngx_master_process_cycle() {
 //                               NGX_PROCESS_RESPAWN);
 //    ngx_start_garbage_collector(cycle, NGX_PROCESS_RESPAWN);
 
+    printf("ngx_argc is %i\n", ngx_argc);
     ngx_start_worker_processes(4, NGX_PROCESS_RESPAWN);
     ngx_start_garbage_collector(NGX_PROCESS_RESPAWN);
 
