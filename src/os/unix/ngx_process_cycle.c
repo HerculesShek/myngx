@@ -89,12 +89,12 @@ ngx_master_process_cycle() {
     }
 
 //    title = ngx_palloc(cycle->pool, size);
-
-    p      = ngx_cpymem(title, master_process, sizeof(master_process) - 1);
-    for (i = 0; i < ngx_argc; i++) {
-        *p++ = ' ';
-        p = ngx_cpystrn(p, (u_char *) ngx_argv[i], size);
-    }
+//
+//    p      = ngx_cpymem(title, master_process, sizeof(master_process) - 1);
+//    for (i = 0; i < ngx_argc; i++) {
+//        *p++ = ' ';
+//        p = ngx_cpystrn(p, (u_char *) ngx_argv[i], size);
+//    }
 
 //    ngx_setproctitle(title);
 
