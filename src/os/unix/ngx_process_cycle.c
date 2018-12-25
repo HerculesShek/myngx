@@ -287,7 +287,8 @@ static void ngx_start_worker_processes(ngx_int_t n, ngx_int_t type) {
 
 //        cpu_affinity = ngx_get_cpu_affinity(i);
         // fork子进程 worker process
-        printf("fork process index: %i\n ", i);
+
+        printf("pid is %i, fork process index: %i\n ", getpid(), i);
         ngx_spawn_process(ngx_worker_process_cycle, NULL,
                           "worker process", type);
 
