@@ -22,7 +22,7 @@ static void ngx_worker_process_cycle(void *data);
 //static void ngx_worker_process_init(ngx_cycle_t *cycle, ngx_uint_t priority);
 //static void ngx_worker_process_exit(ngx_cycle_t *cycle);
 //static void ngx_channel_handler(ngx_event_t *ev);
-static void print_sigset(const sigset_t *set);
+static void print_sigset(const sigset_t *set, const char *name);
 
 
 ngx_uint_t ngx_process;
@@ -75,7 +75,8 @@ ngx_master_process_cycle() {
     sigaddset(&set, ngx_signal_value(NGX_SHUTDOWN_SIGNAL)); //SIGQUIT
     sigaddset(&set, ngx_signal_value(NGX_CHANGEBIN_SIGNAL)); // SIGUSR2
 
-    print_sigset(&set);
+    printf("sizeof sigset_t is %lu\n", sizeof(sigset_t)); // mac是 4
+    print_sigset(&set, "set");
 
 
     // 把以上信号全部加入信号屏蔽字中！
@@ -86,7 +87,7 @@ ngx_master_process_cycle() {
     }
 
     sigemptyset(&set);
-    print_sigset(&set);
+    print_sigset(&set, "set");
 
     size = sizeof(master_process);
     printf("size is %zu\n", size);
@@ -434,7 +435,8 @@ ngx_start_garbage_collector(ngx_int_t type) {
 }
 
 
-void print_sigset(const sigset_t *set) {
+void print_sigset(const sigset_t *set, const char *name) {
+    printf("sigset[%s] is:\n", name);
     int i;
     for (i = 1; i < NSIG; ++i) {
         if (sigismember(set, i))
