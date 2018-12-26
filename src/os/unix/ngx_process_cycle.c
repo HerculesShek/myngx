@@ -6,9 +6,6 @@
 //#include <time.h>
 //#include <stdlib.h>
 
-ngx_uint_t ngx_process;
-ngx_pid_t  ngx_pid;
-
 u_long        cpu_affinity;
 static u_char master_process[] = "master process";
 
@@ -21,10 +18,11 @@ static void ngx_start_garbage_collector(ngx_int_t type);
 //static ngx_uint_t ngx_reap_childs(ngx_cycle_t *cycle);
 //static void ngx_master_process_exit(ngx_cycle_t *cycle);
 static void ngx_worker_process_cycle(void *data);
+
 //static void ngx_worker_process_init(ngx_cycle_t *cycle, ngx_uint_t priority);
 //static void ngx_worker_process_exit(ngx_cycle_t *cycle);
 //static void ngx_channel_handler(ngx_event_t *ev);
-
+static void print_sigset(const sigset_t *set);
 
 
 ngx_uint_t ngx_process;
@@ -64,27 +62,34 @@ ngx_master_process_cycle() {
 //    ngx_listening_t   *ls;
 //    ngx_core_conf_t   *ccf;
 
+    // 初始化信号集 并设置接受相关的信号
     sigemptyset(&set);
     sigaddset(&set, SIGCHLD);
     sigaddset(&set, SIGALRM);
     sigaddset(&set, SIGIO);
     sigaddset(&set, SIGINT);
-    sigaddset(&set, ngx_signal_value(NGX_RECONFIGURE_SIGNAL));
-    sigaddset(&set, ngx_signal_value(NGX_REOPEN_SIGNAL));
-    sigaddset(&set, ngx_signal_value(NGX_NOACCEPT_SIGNAL));
-    sigaddset(&set, ngx_signal_value(NGX_TERMINATE_SIGNAL));
-    sigaddset(&set, ngx_signal_value(NGX_SHUTDOWN_SIGNAL));
-    sigaddset(&set, ngx_signal_value(NGX_CHANGEBIN_SIGNAL));
+    sigaddset(&set, ngx_signal_value(NGX_RECONFIGURE_SIGNAL)); // SIGHUP
+    sigaddset(&set, ngx_signal_value(NGX_REOPEN_SIGNAL)); // SIGUSR1
+    sigaddset(&set, ngx_signal_value(NGX_NOACCEPT_SIGNAL)); //SIGWINCH
+    sigaddset(&set, ngx_signal_value(NGX_TERMINATE_SIGNAL)); //SIGTERM
+    sigaddset(&set, ngx_signal_value(NGX_SHUTDOWN_SIGNAL)); //SIGQUIT
+    sigaddset(&set, ngx_signal_value(NGX_CHANGEBIN_SIGNAL)); // SIGUSR2
 
+    print_sigset(&set);
+
+
+    // 把以上信号全部加入信号屏蔽字中！
     if (sigprocmask(SIG_BLOCK, &set, NULL) == -1) {
 //        ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
 //                      "sigprocmask() failed");
+        printf("sigprocmask failed...\n");
     }
 
     sigemptyset(&set);
-
+    print_sigset(&set);
 
     size = sizeof(master_process);
+    printf("size is %zu\n", size);
 
     for (i = 0; i < ngx_argc; i++) {
         size += ngx_strlen(ngx_argv[i]) + 1;
@@ -331,23 +336,21 @@ ngx_worker_process_cycle(void *data) {
 //    ngx_setproctitle("worker process");
 
 
-    srand(time(NULL));   // Initialization, should only be called once.
-
-
+//    srand(time(NULL));   // Initialization, should only be called once.
+    srand((unsigned int) ngx_pid);
     printf("\tpid[%i] is begin....\n", getpid());
 
-
-    // todo will 工作进程必须死循环 否则会创建多余进程
+    // todo will 工作进程必须是死循环 否则会创建多余进程
     for (;;) {
         static count = 0;
+        int    r     = rand();
+        int    ss    = r % 10;
 
-        printf("\tpid[%i] is working on [%i] round(s)....\n", getpid(), count);
+        printf("\tpid[%i] is working on [%i] round(s) will sleep [%i] seconds....\n", ngx_pid, count, ss);
         count++;
-        int r  = rand();
-        int ss = r % 10;
         sleep(ss);
 
-        if (count > 10)
+        if (count > 4)
             exit(0);
     }
 //    for ( ;; ) {
@@ -428,4 +431,16 @@ ngx_start_garbage_collector(ngx_int_t type) {
                           &ch, sizeof(ngx_channel_t), cycle->log);
     }
 #endif
+}
+
+
+void print_sigset(const sigset_t *set) {
+    int i;
+    for (i = 1; i < NSIG; ++i) {
+        if (sigismember(set, i))
+            printf("1");
+        else
+            printf("0");
+    }
+    putchar('\n');
 }

@@ -55,3 +55,4 @@ set(SOURCE_FILES
 
 
 add_executable(myngx ${SOURCE_FILES})
+add_executable(signo_test src/test/signo_test.c)

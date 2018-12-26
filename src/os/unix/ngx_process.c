@@ -161,9 +161,10 @@ ngx_spawn_process(ngx_spawn_proc_pt proc, void *data,
             return NGX_INVALID_PID;
 
         case 0:
-            // 子进程 执行传递进来的子进程函数
+            // 重置子进程的pid
             ngx_pid = ngx_getpid();
 //            proc(cycle, data);
+            // 子进程 执行传递进来的子进程函数
             proc(data);
             break;
 

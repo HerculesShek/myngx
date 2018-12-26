@@ -15,9 +15,10 @@ main(int argc, char *const *argv) {
 
     ngx_pid = ngx_getpid();
 
-    printf("ngx_pid is %i\n", ngx_pid);
+    printf("ngx_pid is %i\n\n", ngx_pid);
 
     ngx_argc = argc;
+    ngx_argv = (char **) argv;
 
     ngx_master_process_cycle();
 
