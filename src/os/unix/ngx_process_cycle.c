@@ -75,9 +75,8 @@ ngx_master_process_cycle() {
     sigaddset(&set, ngx_signal_value(NGX_SHUTDOWN_SIGNAL)); //SIGQUIT
     sigaddset(&set, ngx_signal_value(NGX_CHANGEBIN_SIGNAL)); // SIGUSR2
 
-    printf("sizeof sigset_t is %lu\n", sizeof(sigset_t)); // mac是 4
-    print_sigset(&set, "set");
-
+//    printf("sizeof sigset_t is %lu\n", sizeof(sigset_t)); // mac是 4 centos7 x64 是128 看来 sizeof在不同系统上代表的意义也不同
+//    print_sigset(&set, "set");
 
     // 把以上信号全部加入信号屏蔽字中！
     if (sigprocmask(SIG_BLOCK, &set, NULL) == -1) {
@@ -86,11 +85,11 @@ ngx_master_process_cycle() {
         printf("sigprocmask failed...\n");
     }
 
-    sigemptyset(&set);
-    print_sigset(&set, "set");
+//    sigemptyset(&set);
+//    print_sigset(&set, "set");
 
     size = sizeof(master_process);
-    printf("size is %zu\n", size);
+//    printf("size is %zu\n", size);
 
     for (i = 0; i < ngx_argc; i++) {
         size += ngx_strlen(ngx_argv[i]) + 1;
@@ -113,7 +112,8 @@ ngx_master_process_cycle() {
 //                               NGX_PROCESS_RESPAWN);
 //    ngx_start_garbage_collector(cycle, NGX_PROCESS_RESPAWN);
 
-    printf("ngx_argc is %i\n", ngx_argc);
+//    printf("ngx_argc is %i\n", ngx_argc);
+
     ngx_start_worker_processes(4, NGX_PROCESS_RESPAWN);
     ngx_start_garbage_collector(NGX_PROCESS_RESPAWN);
 
@@ -296,7 +296,7 @@ static void ngx_start_worker_processes(ngx_int_t n, ngx_int_t type) {
 //        cpu_affinity = ngx_get_cpu_affinity(i);
         // fork子进程 worker process
 
-        printf("pid is %i, ppid is %i, fork process index: %i\n ", getpid(), getppid(), i);
+        printf("pid[%i] will fork [%i]nd sub-process\n", getpid(), (i + 1));
         ngx_spawn_process(ngx_worker_process_cycle, NULL,
                           "worker process", type);
 
