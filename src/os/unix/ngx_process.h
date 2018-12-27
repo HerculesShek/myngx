@@ -4,7 +4,6 @@
 
 #define NGX_MAX_PROCESSES         1024 /* nginx中最大进程数 */
 
-
 #define ngx_getpid   getpid
 
 typedef pid_t ngx_pid_t;
@@ -12,12 +11,10 @@ typedef pid_t ngx_pid_t;
 /* 无效的pid使用-1来标记 */
 #define NGX_INVALID_PID  -1
 
-
 #define NGX_PROCESS_NORESPAWN     -1  // no re_spawn 子进程退出时 父进程不会再次重启
 #define NGX_PROCESS_RESPAWN       -2  // 子进程异常退出时,父进程需要重启
 #define NGX_PROCESS_JUST_RESPAWN  -3
 #define NGX_PROCESS_DETACHED      -4  // 热代码替换，暂时估计是用于在不重启Nginx的情况下进行软件升级
-
 
 //TODO typedef void (*ngx_spawn_proc_pt)(ngx_cycle_t *cycle, void *data);
 typedef void (*ngx_spawn_proc_pt)(void *data);
@@ -37,8 +34,7 @@ typedef struct {
     unsigned detached:1;
     unsigned exiting:1;
     unsigned exited:1;
-}            ngx_process_t;
-
+} ngx_process_t;
 
 ngx_pid_t ngx_spawn_process(ngx_spawn_proc_pt proc, void *data, char *name, ngx_int_t respawn);
 
@@ -52,6 +48,5 @@ extern ngx_socket_t  ngx_channel;
 extern ngx_int_t     ngx_process_slot;
 extern ngx_int_t     ngx_last_process;
 extern ngx_process_t ngx_processes[NGX_MAX_PROCESSES];
-
 
 #endif //MYNGX_NGX_PROCESS_H

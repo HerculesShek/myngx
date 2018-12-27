@@ -40,10 +40,11 @@ ngx_spawn_process(ngx_spawn_proc_pt proc, void *data,
     /**
      * 1 首先找到要fork出来的子进程要放在进程表ngx_processes的哪个位置 用s记录(slot)
      */
-    if (respawn >= 0) { /* 如果传进来的类型大于0 就是确定这个进程已经退出了 可以直接确定位置 */
+    if (respawn >= 0) { /* 如果传进来的类型大于0 就是确定这个进程已经退出了 可以直接确定位置 就是顶替掉原来的进程 */
         s = respawn;
-
     } else {
+        // 这里说明所有的子进程都是紧挨着存放的
+        // 如果ngx_last_process是0 的话 虽然没有执行循环体， 但是 s=0 已经赋值
         for (s = 0; s < ngx_last_process; s++) {
             if (ngx_processes[s].pid == -1) {
                 break;
@@ -58,7 +59,11 @@ ngx_spawn_process(ngx_spawn_proc_pt proc, void *data,
         }
     }
 
-    // 如果类型为NGX_PROCESS_DETACHED,则说明是热代码替换(热代码替换也是通过这个函数进行处理的),因此不需要新建socketpair。
+    printf("pid[%i] slot is %i\n", ngx_pid, s);
+
+    // 如果类型为NGX_PROCESS_DETACHED
+    // 则说明是热代码替换(热代码替换也是通过这个函数进行处理的在else中)
+    // 不是热代码替换 就需要新建socketpair。
     if (respawn != NGX_PROCESS_DETACHED) {
 
         /* Solaris 9 still has no AF_LOCAL */
@@ -71,6 +76,13 @@ ngx_spawn_process(ngx_spawn_proc_pt proc, void *data,
 //                          "socketpair() failed while spawning \"%s\"", name);
             return NGX_INVALID_PID;
         }
+
+//        printf("after socketpair:\n\t pid[%i] slot[%i] channel[0]:%i, channel[1]:%i, fd_max is: %i\n",
+        printf("after socketpair:\n\t pid[%i] slot[%i] channel[0]:%i, channel[1]:%i\n",
+               ngx_pid,
+               s,
+               ngx_processes[s].channel[0],
+               ngx_processes[s].channel[1]);
 
 //        ngx_log_debug2(NGX_LOG_DEBUG_CORE, cycle->log, 0,
 //                       "channel %d:%d",

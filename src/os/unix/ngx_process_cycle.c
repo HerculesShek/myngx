@@ -297,8 +297,7 @@ static void ngx_start_worker_processes(ngx_int_t n, ngx_int_t type) {
         // fork子进程 worker process
 
         printf("pid[%i] will fork [%i]nd sub-process\n", getpid(), (i + 1));
-        ngx_spawn_process(ngx_worker_process_cycle, NULL,
-                          "worker process", type);
+        ngx_spawn_process(ngx_worker_process_cycle, NULL, "worker process", type);
 
         // 初始化channel,ngx_process_slot这个我们在上面的spawn函数中已经赋值完毕,就是当前子进程的位置。
         ch.pid  = ngx_processes[ngx_process_slot].pid;
@@ -347,12 +346,14 @@ ngx_worker_process_cycle(void *data) {
         int    r     = rand();
         int    ss    = r % 10;
 
-        printf("\tpid[%i] is working on [%i] round(s) will sleep [%i] seconds....\n", ngx_pid, count, ss);
+        printf("\tpid[%i] is working on [%i] round(s) will sleep [%i] seconds...\n", ngx_pid, count, ss);
         count++;
         sleep(ss);
 
-        if (count > 4)
+        if (count > 4) {
+            printf("pid[%i] is exiting...\n", ngx_pid);
             exit(0);
+        }
     }
 //    for ( ;; ) {
 //        if (ngx_exiting

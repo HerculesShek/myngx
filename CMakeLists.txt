@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 project(myngx C)
 
-#set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD 11)
 
 set(CMAKE_C_FLAGS "-pipe -Wall -Wextra -Wpointer-arith -Wconditional-uninitialized -Wno-unused-parameter -Wno-deprecated-declarations")
 
@@ -56,3 +56,9 @@ set(SOURCE_FILES
 
 add_executable(myngx ${SOURCE_FILES})
 add_executable(signo_test src/test/signo_test.c)
+add_executable(process_arr_test src/test/process_arr_test.c)
+add_executable(pipe_test src/test/pipe_test.c)
+add_executable(socketpair_test src/test/socketpair_test.c)
+add_executable(fork_parent_var_test src/test/fork_parent_var_test.c)
+add_executable(fork_parent_var_test2 src/test/fork_parent_var_test2.c)
+add_executable(delay_test1 src/test/delay_test1.c)

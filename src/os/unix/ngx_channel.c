@@ -31,7 +31,7 @@ ngx_write_channel(ngx_socket_t s, ngx_channel_t *ch, size_t size) {
     union {
         struct cmsghdr cm;
         char           space[CMSG_SPACE(sizeof(int))];
-    }             cmsg;
+    } cmsg;
 
     if (ch->fd == -1) {
         msg.msg_control    = NULL;
