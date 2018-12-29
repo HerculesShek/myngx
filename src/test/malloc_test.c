@@ -6,12 +6,29 @@
 
 typedef struct student stu;
 
-struct student {
+//struct student { // stu size is 32
+//    int          age;
+//    u_char       *name;
+//    stu          *next;
+//    unsigned int is_local:1;
+//};
+
+struct student { // stu size is still 32
     int          age;
     u_char       *name;
     stu          *next;
     unsigned int is_local:1;
+    unsigned int gender:1;
 };
+
+//struct student { // stu size is still 32
+//    unsigned int gender:1;
+//    int          age;
+//    u_char       *name;
+//    stu          *next;
+//    unsigned int is_local:1;
+//};
+
 
 #define NAME "Mr.Q"
 
@@ -29,6 +46,10 @@ int main() {
     p->is_local = 1;
 
     printf("stu size is %zu\n", stu_size);
+    printf("size of p->age is %zu\n", sizeof(p->age));
+    printf("size of p->name is %zu\n", sizeof(p->name));
+    printf("size of p->next is %zu\n", sizeof(p->next));
+    printf("size of unsigned int is %zu\n", sizeof(unsigned int));
 
     stu *p2 = malloc(pool_size);
     p->name = (u_char *) malloc(sizeof(NAME));
