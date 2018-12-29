@@ -14,12 +14,12 @@ static void ngx_start_worker_processes(ngx_int_t n, ngx_int_t type);
 
 static void ngx_start_garbage_collector(ngx_int_t type);
 
+
 //static void ngx_signal_worker_processes(ngx_cycle_t *cycle, int signo);
 //static ngx_uint_t ngx_reap_childs(ngx_cycle_t *cycle);
 //static void ngx_master_process_exit(ngx_cycle_t *cycle);
 static void ngx_worker_process_cycle(void *data);
-
-//static void ngx_worker_process_init(ngx_cycle_t *cycle, ngx_uint_t priority);
+static void ngx_worker_process_init(ngx_uint_t priority);
 //static void ngx_worker_process_exit(ngx_cycle_t *cycle);
 //static void ngx_channel_handler(ngx_event_t *ev);
 static void print_sigset(const sigset_t *set, const char *name);
@@ -321,8 +321,8 @@ static void ngx_start_worker_processes(ngx_int_t n, ngx_int_t type) {
 
             /* TODO: NGX_AGAIN */
             // 然后传递这个channel给其他子进程(主要是传递句柄)。
-            ngx_write_channel(ngx_processes[s].channel[0],
-                              &ch, sizeof(ngx_channel_t));
+            printf("master is sending to %i cmd...\n", ngx_processes[s].pid);
+            ngx_write_channel(ngx_processes[s].channel[0], &ch, sizeof(ngx_channel_t));
         }
     }
 }
@@ -331,7 +331,7 @@ static void ngx_start_worker_processes(ngx_int_t n, ngx_int_t type) {
 static void
 ngx_worker_process_cycle(void *data) {
 
-//    ngx_worker_process_init(cycle, 1);
+    ngx_worker_process_init(1);
 
 //    ngx_setproctitle("worker process");
 
@@ -344,12 +344,21 @@ ngx_worker_process_cycle(void *data) {
     for (;;) {
         static count = 0;
         int    r     = rand();
-        int    ss    = r % 10;
+        int    ss    = r % 7;
+        ss += 3;
 
         printf("\tpid[%i] is working on [%i] round(s) will sleep [%i] seconds...\n", ngx_pid, count, ss);
         count++;
-        sleep(ss);
+//        sleep(ss);
+        delay(ss);
 
+        // todo will 父子间通讯
+        ngx_channel_t ch;
+        ngx_int_t     n;
+        n = ngx_read_channel(ngx_processes[ngx_process_slot].channel[1], &ch, sizeof(ngx_channel_t));
+        if (n == sizeof(ngx_channel_t)) {
+
+        }
         if (count > 4) {
             printf("pid[%i] is exiting...\n", ngx_pid);
             exit(0);
@@ -433,6 +442,197 @@ ngx_start_garbage_collector(ngx_int_t type) {
                           &ch, sizeof(ngx_channel_t), cycle->log);
     }
 #endif
+}
+
+
+static void
+ngx_worker_process_init(ngx_uint_t priority)
+{
+    sigset_t           set;
+    ngx_int_t          n;
+    ngx_uint_t         i;
+    struct rlimit      rlmt;
+//    ngx_core_conf_t   *ccf;
+//    ngx_listening_t   *ls;
+
+    ngx_process = NGX_PROCESS_WORKER;
+
+//    ccf = (ngx_core_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_core_module);
+//
+//    if (geteuid() == 0) {
+//        if (priority && ccf->priority != 0) {
+//            if (setpriority(PRIO_PROCESS, 0, ccf->priority) == -1) {
+//                ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+//                              "setpriority(%d) failed", ccf->priority);
+//            }
+//        }
+//
+//        if (ccf->rlimit_nofile != NGX_CONF_UNSET) {
+//            rlmt.rlim_cur = (rlim_t) ccf->rlimit_nofile;
+//            rlmt.rlim_max = (rlim_t) ccf->rlimit_nofile;
+//
+//            if (setrlimit(RLIMIT_NOFILE, &rlmt) == -1) {
+//                ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+//                              "setrlimit(RLIMIT_NOFILE, %i) failed",
+//                              ccf->rlimit_nofile);
+//            }
+//        }
+//
+//        if (ccf->rlimit_core != NGX_CONF_UNSET) {
+//            rlmt.rlim_cur = (rlim_t) ccf->rlimit_core;
+//            rlmt.rlim_max = (rlim_t) ccf->rlimit_core;
+//
+//            if (setrlimit(RLIMIT_CORE, &rlmt) == -1) {
+//                ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+//                              "setrlimit(RLIMIT_CORE, %i) failed",
+//                              ccf->rlimit_core);
+//            }
+//        }
+
+#ifdef RLIMIT_SIGPENDING
+        if (ccf->rlimit_sigpending != NGX_CONF_UNSET) {
+            rlmt.rlim_cur = (rlim_t) ccf->rlimit_sigpending;
+            rlmt.rlim_max = (rlim_t) ccf->rlimit_sigpending;
+
+            if (setrlimit(RLIMIT_SIGPENDING, &rlmt) == -1) {
+                ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+                              "setrlimit(RLIMIT_SIGPENDING, %i) failed",
+                              ccf->rlimit_sigpending);
+            }
+        }
+#endif
+//
+//        if (setgid(ccf->group) == -1) {
+//            ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+//                          "setgid(%d) failed", ccf->group);
+//            /* fatal */
+//            exit(2);
+//        }
+//
+//        if (initgroups(ccf->username, ccf->group) == -1) {
+//            ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+//                          "initgroups(%s, %d) failed",
+//                          ccf->username, ccf->group);
+//        }
+//
+//        if (setuid(ccf->user) == -1) {
+//            ngx_log_error(NGX_LOG_EMERG, cycle->log, ngx_errno,
+//                          "setuid(%d) failed", ccf->user);
+//            /* fatal */
+//            exit(2);
+//        }
+//    }
+
+#if (NGX_HAVE_SCHED_SETAFFINITY)
+
+    if (cpu_affinity) {
+        ngx_log_error(NGX_LOG_NOTICE, cycle->log, 0,
+                      "sched_setaffinity(0x%08Xl)", cpu_affinity);
+
+        if (sched_setaffinity(0, 32, (cpu_set_t *) &cpu_affinity) == -1) {
+            ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
+                          "sched_setaffinity(0x%08Xl) failed", cpu_affinity);
+        }
+    }
+
+#endif
+
+#if (NGX_HAVE_PR_SET_DUMPABLE)
+
+    /* allow coredump after setuid() in Linux 2.4.x */
+
+    if (prctl(PR_SET_DUMPABLE, 1, 0, 0, 0) == -1) {
+        ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
+                      "prctl(PR_SET_DUMPABLE) failed");
+    }
+
+#endif
+
+//    if (ccf->working_directory.len) {
+//        if (chdir((char *) ccf->working_directory.data) == -1) {
+//            ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
+//                          "chdir(\"%s\") failed", ccf->working_directory.data);
+//            /* fatal */
+//            exit(2);
+//        }
+//    }
+
+    sigemptyset(&set);
+
+    if (sigprocmask(SIG_SETMASK, &set, NULL) == -1) {
+//        ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
+//                      "sigprocmask() failed");
+    }
+
+//    ngx_init_temp_number();
+
+    /*
+     * disable deleting previous events for the listening sockets because
+     * in the worker processes there are no events at all at this point
+     */
+//    ls = cycle->listening.elts;
+//    for (i = 0; i < cycle->listening.nelts; i++) {
+//        ls[i].previous = NULL;
+//    }
+//
+//    for (i = 0; ngx_modules[i]; i++) {
+//        if (ngx_modules[i]->init_process) {
+//            if (ngx_modules[i]->init_process(cycle) == NGX_ERROR) {
+//                /* fatal */
+//                exit(2);
+//            }
+//        }
+//    }
+
+    for (n = 0; n < ngx_last_process; n++) {
+
+        if (ngx_processes[n].pid == -1) {
+            continue;
+        }
+
+        if (n == ngx_process_slot) {
+            continue;
+        }
+
+        if (ngx_processes[n].channel[1] == -1) {
+            continue;
+        }
+
+        if (close(ngx_processes[n].channel[1]) == -1) {
+//            ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
+//                          "close() channel failed");
+        }
+    }
+
+    // 子进程中关闭channel[0] 使用channel[1]
+    if (close(ngx_processes[ngx_process_slot].channel[0]) == -1) {
+//        ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
+//                      "close() channel failed");
+    }
+
+#if 0
+    ngx_last_process = 0;
+#endif
+
+//    if (ngx_add_channel_event(cycle, ngx_channel, NGX_READ_EVENT,
+//                              ngx_channel_handler) == NGX_ERROR)
+//    {
+//        /* fatal */
+//        exit(2);
+//    }
+}
+
+
+
+void delay(int number_of_seconds) {
+    // Converting time into milli_seconds
+    int milli_seconds = CLOCKS_PER_SEC * number_of_seconds;
+
+    // Stroing start time
+    clock_t start_time = clock();
+
+    // looping till required time is not acheived
+    while (clock() < start_time + milli_seconds);
 }
 
 

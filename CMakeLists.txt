@@ -55,10 +55,13 @@ set(SOURCE_FILES
 
 
 add_executable(myngx ${SOURCE_FILES})
-add_executable(signo_test src/test/signo_test.c)
+add_executable(sigset_test src/test/sigset_test.c)
 add_executable(process_arr_test src/test/process_arr_test.c)
 add_executable(pipe_test src/test/pipe_test.c)
 add_executable(socketpair_test src/test/socketpair_test.c)
 add_executable(fork_parent_var_test src/test/fork_parent_var_test.c)
 add_executable(fork_parent_var_test2 src/test/fork_parent_var_test2.c)
 add_executable(delay_test1 src/test/delay_test1.c)
+add_executable(sigsuspend_test src/test/sigsuspend_test.c)
+add_executable(sigaction_test src/test/sigaction_test.c)
+add_executable(malloc_test src/test/malloc_test.c)

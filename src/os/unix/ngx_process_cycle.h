@@ -26,6 +26,8 @@ extern ngx_pid_t  ngx_pid;
 //void ngx_master_process_cycle(ngx_cycle_t *cycle);
 void ngx_master_process_cycle();
 
+void delay(int number_of_seconds);
+
 
 
 extern ngx_uint_t      ngx_process;

@@ -65,7 +65,7 @@ int main() {
 
     /**
      * sigprocmask设置的是屏蔽字 可以理解为静态的
-     * 而当前已经阻塞的信号可以通过sigpending获取 同样的信号 如果在屏蔽字中 无论传入多少次 都按照一次计算
+     * 而当前已经阻塞的信号可以通过sigpending函数获取 同样的信号 如果在屏蔽字中 无论传入多少次 都按照一次计算
      */
     if (sigpending(&pendmask) < 0) {
         printf("sigpending error\n");

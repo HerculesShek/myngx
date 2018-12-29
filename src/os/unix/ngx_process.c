@@ -59,8 +59,6 @@ ngx_spawn_process(ngx_spawn_proc_pt proc, void *data,
         }
     }
 
-    printf("pid[%i] slot is %i\n", ngx_pid, s);
-
     // 如果类型为NGX_PROCESS_DETACHED
     // 则说明是热代码替换(热代码替换也是通过这个函数进行处理的在else中)
     // 不是热代码替换 就需要新建socketpair。
@@ -78,23 +76,26 @@ ngx_spawn_process(ngx_spawn_proc_pt proc, void *data,
         }
 
 //        printf("after socketpair:\n\t pid[%i] slot[%i] channel[0]:%i, channel[1]:%i, fd_max is: %i\n",
-        printf("after socketpair:\n\t pid[%i] slot[%i] channel[0]:%i, channel[1]:%i\n",
-               ngx_pid,
-               s,
-               ngx_processes[s].channel[0],
-               ngx_processes[s].channel[1]);
+//        printf("after socketpair:\n\t pid[%i] slot[%i] channel[0]:%i, channel[1]:%i\n",
+//               ngx_pid,
+//               s,
+//               ngx_processes[s].channel[0],
+//               ngx_processes[s].channel[1]);
 
 //        ngx_log_debug2(NGX_LOG_DEBUG_CORE, cycle->log, 0,
 //                       "channel %d:%d",
 //                       ngx_processes[s].channel[0],
 //                       ngx_processes[s].channel[1]);
         // 设置非阻塞模式
+        // TODO will 先关闭父进程的非阻塞模式
         if (ngx_nonblocking(ngx_processes[s].channel[0]) == -1) {
+//        if (ngx_blocking(ngx_processes[s].channel[0]) == -1) {
 //            ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
 //                          ngx_nonblocking_n
 //            " failed while spawning \"%s\"",
 //                    name);
 //            ngx_close_channel(ngx_processes[s].channel, cycle->log);
+            printf("failed while spawning");
             ngx_close_channel(ngx_processes[s].channel);
             return NGX_INVALID_PID;
         }
@@ -175,6 +176,7 @@ ngx_spawn_process(ngx_spawn_proc_pt proc, void *data,
         case 0:
             // 重置子进程的pid
             ngx_pid = ngx_getpid();
+            printf("subprocess pid[%i] slot is %i\n", ngx_pid, s);
 //            proc(cycle, data);
             // 子进程 执行传递进来的子进程函数
             proc(data);
